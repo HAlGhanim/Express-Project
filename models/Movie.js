@@ -6,6 +6,7 @@ const MovieSchema = new Schema({
   releaseDate: { type: Date, required: true },
   posterImage: { type: String, required: true },
   ratings: [Number],
+  cast: [{ actorName: String, actorImage: String }],
 });
 
 module.exports = model("Movie", MovieSchema);

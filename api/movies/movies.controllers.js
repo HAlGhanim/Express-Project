@@ -11,7 +11,7 @@ exports.fetchMovie = async (movieId, next) => {
 
 exports.getAllMovies = async (req, res) => {
   try {
-    const movies = await Movie.find();
+    const movies = await Movie.find().select("-__v");
     return res.status(200).json(movies);
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -80,5 +80,33 @@ exports.updateMovieRating = async (req, res, next) => {
     }
   } catch (error) {
     return next({ status: 400, message: error.message });
+  }
+};
+
+exports.addCastMember = async (req, res, next) => {
+  try {
+    if (req.file) {
+      req.body.actorImage = `http://${req.get("host")}/media/${
+        req.file.filename
+      }`;
+      console.log(req.body.actorImage);
+    }
+    const newMovies = await Movie.findByIdAndUpdate(
+      req.movie._id,
+      {
+        $push: {
+          cast: [
+            { actorName: req.body.actorName, actorImage: req.body.actorImage },
+          ],
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    console.log(req.movie.cast);
+    res.status(201).json(newMovies);
+  } catch (error) {
+    next(error);
   }
 };

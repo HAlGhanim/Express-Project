@@ -10,6 +10,7 @@ const {
   updateMovie,
   fetchMovie,
   updateMovieRating,
+  addCastMember,
 } = require("./movies.controllers");
 
 router.param("movieId", async (req, res, next, movieId) => {
@@ -34,4 +35,6 @@ router.delete("/:movieId", deleteMovie);
 router.patch("/:movieId", updateMovieRating);
 
 router.put("/:movieId", updateMovie);
+
+router.put("/cast/:movieId", upload.single("actorImage"), addCastMember);
 module.exports = router;
